@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.facebook.react.bridge.ReadableMap;
 import com.rnbiometrics.R;
 
 /**
@@ -24,7 +25,12 @@ import com.rnbiometrics.R;
 @TargetApi(Build.VERSION_CODES.M)
 public class ReactNativeBiometricsDialog extends DialogFragment implements ReactNativeBiometricsCallback {
 
-    protected String title;
+    protected String reason;
+    protected String title; 
+    protected String hint;
+    protected String cancel;
+    protected String recognized;
+    protected String notRecognized;
     protected FingerprintManager.CryptoObject cryptoObject;
     protected ReactNativeBiometricsCallback biometricAuthCallback;
 
@@ -32,8 +38,13 @@ public class ReactNativeBiometricsDialog extends DialogFragment implements React
     protected Activity activity;
     protected Button cancelButton;
 
-    public void init(String title, FingerprintManager.CryptoObject cryptoObject, ReactNativeBiometricsCallback callback) {
-        this.title = title;
+    public void init(String reason, ReadableMap androidLocalization, FingerprintManager.CryptoObject cryptoObject, ReactNativeBiometricsCallback callback) {
+        this.reason = reason;
+        this.title = androidLocalization.getString("title");
+        this.hint = androidLocalization.getString("hint");
+        this.cancel = androidLocalization.getString("cancel");
+        this.recognized = androidLocalization.getString("recognized");
+        this.notRecognized = androidLocalization.getString("notRecognized");
         this.cryptoObject = cryptoObject;
         this.biometricAuthCallback = callback;
     }
@@ -47,10 +58,17 @@ public class ReactNativeBiometricsDialog extends DialogFragment implements React
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        getDialog().setTitle(title);
+        getDialog().setTitle(this.title);
         View view = inflater.inflate(R.layout.fingerprint_dialog_container, container, false);
+
+        TextView description = view.findViewById(R.id.fingerprint_description);
+        description.setText(this.reason);
+
+        TextView hint = view.findViewById(R.id.fingerprint_status);
+        hint.setText(this.hint);
+
         cancelButton = (Button) view.findViewById(R.id.cancel_button);
-        cancelButton.setText(R.string.fingerprint_cancel);
+        cancelButton.setText(this.cancel);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,6 +81,9 @@ public class ReactNativeBiometricsDialog extends DialogFragment implements React
                 activity.getSystemService(FingerprintManager.class),
                 (ImageView) view.findViewById(R.id.fingerprint_icon),
                 (TextView) view.findViewById(R.id.fingerprint_status),
+                this.recognized,
+                this.notRecognized,
+                this.hint,
                 this
         );
 

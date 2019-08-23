@@ -136,12 +136,12 @@ RCT_EXPORT_METHOD(createSignature: (NSString *)promptMessage payload:(NSString *
   });
 }
 
-RCT_EXPORT_METHOD(simplePrompt: (NSString *)promptMessage resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(simplePrompt: (NSString*)reason androidLocalization:(NSDictionary *)androidLocalization resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
   dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     LAContext *context = [[LAContext alloc] init];
     context.localizedFallbackTitle = @"";
 
-    [context evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics localizedReason:promptMessage reply:^(BOOL success, NSError *fingerprintError) {
+    [context evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics localizedReason:reason reply:^(BOOL success, NSError *fingerprintError) {
       if (success) {
         resolve(@(YES));
       } else {

@@ -12,6 +12,8 @@ export default {
    * Enum for face id sensor type
    */
   FaceID: 'FaceID',
+
+
   /**
    * Returns promise that resolves to null, TouchID, or FaceID
    * @returns {Promise} Promise that resolves to null, TouchID, or FaceID
@@ -51,11 +53,11 @@ export default {
    * Prompts user with biometrics dialog using the passed in prompt message and
    * returns promise that resolves if the user passes, and
    * rejects if the user fails or cancels
-   * @param {string} promptMessage
+   * @param {LocalizationStrings} localizationStrings
    * @returns {Promise}  Promise that resolves if the user passes, and
    * rejects if the user fails or cancels
    */
-  simplePrompt: (promptMessage) => {
-    return ReactNativeBiometrics.simplePrompt(promptMessage)
+  simplePrompt: (reason, localizationStrings) => {
+    return ReactNativeBiometrics.simplePrompt(reason, localizationStrings)
   }
 }

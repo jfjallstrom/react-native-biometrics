@@ -7,6 +7,15 @@ declare module 'react-native-biometrics' {
    * Enum for face id sensor type
    */
   const FaceID: string;
+
+  interface AndroidLocalizationStrings {
+    title: string;
+    hint: string;
+    cancel: string;
+    recognized: string;
+    notRecognized: string;
+  }
+
   /**
    * Returns promise that resolves to null, TouchID, or FaceID
    * @returns {Promise} Promise that resolves to null, TouchID, or FaceID
@@ -41,9 +50,10 @@ declare module 'react-native-biometrics' {
    * Prompts user with biometrics dialog using the passed in prompt message and
    * returns promise that resolves if the user passes, and
    * rejects if the user fails or cancels
-   * @param {string} promptMessage
+   * @param {string} reason
+   * @param {AndroidLocalizationStrings} androidLocalization
    * @returns {Promise}  Promise that resolves if the user passes, and
    * rejects if the user fails or cancels
    */
-  function simplePrompt(promptMessage: string): Promise<boolean>;
+  function simplePrompt(reason: string, androidLocalization: AndroidLocalizationStrings): Promise<boolean>;
 }
